@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps/mymap.dart';
 
 void main() {
   runApp(MyApp());
@@ -35,10 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.location_searching),
-      ),
+      body: MyMap(),
     );
   }
 }
