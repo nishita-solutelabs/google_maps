@@ -69,7 +69,7 @@ class _MyMapState extends State<MyMap> {
           _controller
               .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
             target: LatLng(newLocaion.latitude, newLocaion.longitude),
-            zoom: 16.0,
+            zoom: 14.0,
             bearing: 180.0,
             tilt: 1.0,
           )));
@@ -82,18 +82,58 @@ class _MyMapState extends State<MyMap> {
   }
 
   @override
+  void dispose() {
+    if (_locationSubscription != null) {
+      _locationSubscription.cancel();
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: GoogleMap(
+        myLocationButtonEnabled: false,
         mapType: MapType.hybrid,
         initialCameraPosition: _initiallocation,
+
         // ignore: always_specify_types
-        markers: Set<Marker>.of((marker != null) ? [marker] : []),
+        markers: Set<Marker>.of((marker != null) ? <Marker>[marker] : []),
         // ignore: always_specify_types
-        circles: Set<Circle>.of((circle != null) ? [circle] : []),
+        circles: Set<Circle>.of((circle != null) ? <Circle>[circle] : []),
         onMapCreated: (GoogleMapController controller) {
           _controller = controller;
         },
+      ),
+      bottomNavigationBar: Container(
+        color: Colors.blue,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            RaisedButton(
+              color: Colors.orange,
+              onPressed: () {
+                _controller.animateCamera(
+                  CameraUpdate.zoomIn(),
+                );
+              },
+              child: const Icon(Icons.add),
+            ),
+            const SizedBox(
+              width: 40.0,
+              height: 20.0,
+            ),
+            RaisedButton(
+              color: Colors.orange,
+              onPressed: () {
+                _controller.animateCamera(
+                  CameraUpdate.zoomOut(),
+                );
+              },
+              child: const Icon(Icons.remove),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -105,13 +145,5 @@ class _MyMapState extends State<MyMap> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    if (_locationSubscription != null) {
-      _locationSubscription.cancel();
-    }
-    super.dispose();
   }
 }
